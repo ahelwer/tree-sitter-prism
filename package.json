@@ -1,0 +1,25 @@
+{
+  "name": "tree-sitter-prism",
+  "version": "0.1.0",
+  "description": "tree-sitter grammar for PRISM",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahelwer/tree-sitter-prism.git"
+  },
+  "author": "Andrew Helwer",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ahelwer/tree-sitter-prism/issues"
+  },
+  "homepage": "https://github.com/ahelwer/tree-sitter-prism#readme",
+  "dependencies": {
+    "nan": "^2.14.1"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.16.8"
+  }
+}
