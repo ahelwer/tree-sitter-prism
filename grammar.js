@@ -50,7 +50,9 @@ module.exports = grammar({
     ),
 
     command: $ => seq(
-      '[]',
+      '[',
+      optional(field('action', $.identifier)),
+      ']',
       $.guard,
       '->',
       choice(
@@ -69,7 +71,7 @@ module.exports = grammar({
     ),
 
     probabilistic_update: $ => seq(
-      choice($.probability, $.rate),
+      $.expression,
       ':',
       $.updates
     ),
