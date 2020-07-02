@@ -1,5 +1,3 @@
-mdp
-
 const int M = 3;
 
 module slushprocess1
@@ -76,6 +74,8 @@ module slushprocess2 = slushprocess1[
 	sampleResponse1_3 = sampleResponse2_1,
 	sampleResponse2_1 = sampleResponse3_2,
 	sampleResponse3_1 = sampleResponse1_2] endmodule
+
+const int N = 10;
 
 module slushprocess3 = slushprocess1[
 	pc1 = pc3,

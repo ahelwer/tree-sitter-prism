@@ -4,12 +4,20 @@ module.exports = grammar({
   /*extras: $ => [],*/
 
   rules: {
-    source_file: $ =>
-      seq(
-        optional($.model_type),
-        repeat(choice($.constant, $.legacy_constant)),
-        repeat1($.module),
+    source_file: $ => repeat(
+      choice(
+        $.model_type,
+        $.constant,
+        $.legacy_constant,
+        $.module,
+        $.renamed_module,
+        $.multiple_initial_states,
+        $.global_variable,
+        $.formula,
+        $.label,
+        $.rewards,
       ),
+    ),
 
     model_type: $ => choice(
       $.dtmc_model_type,
@@ -55,28 +63,27 @@ module.exports = grammar({
     module: $ => seq(
       'module',
       field('name', $.identifier),
-      choice($.explicit_module, $.renamed_module),
+      repeat($.variable),
+      repeat($.command),
       'endmodule',
     ),
 
-    explicit_module: $ => seq(
-      repeat1($.variable),
-      repeat1($.command),
-    ),
-
     renamed_module: $ => seq(
+      'module',
+      field('name', $.identifier),
       '=',
       field('source_module', $.identifier),
       '[',
       repeat(seq($.rename, ',')),
       $.rename,
-      ']'
+      ']',
+      'endmodule',
     ),
 
     rename: $ => seq(
-      $.identifier,
+      field('old_name', $.identifier),
       '=',
-      $.identifier,
+      field('new_name', $.identifier),
     ),
 
     variable: $ => seq(
@@ -100,7 +107,6 @@ module.exports = grammar({
       ';',
     ),
 
-    // TODO: ensure boolean
     guard: $ => $.expression,
 
     probabilistic_updates: $ => seq(
@@ -126,6 +132,50 @@ module.exports = grammar({
       '=',
       field('value', $.expression),
       ')'
+    ),
+
+    multiple_initial_states: $ => seq(
+      'init',
+      field('predicate', $.expression),
+      'endinit',
+    ),
+
+    global_variable: $ => seq(
+      'global',
+      field('name', $.identifier),
+      ':',
+      field('type', choice($.range, $.int_type, $.bool_type)),
+      field('init', optional(seq('init', $.expression))),
+      ';'
+    ),
+
+    formula: $ => seq(
+      'formula',
+      field('name', $.identifier),
+      '=',
+      field('value', $.expression),
+      ';',
+    ),
+
+    label: $ => seq(
+      'label',
+      field('name', $.label_identifier),
+      '=',
+      field('predicate', $.expression),
+      ';',
+    ),
+
+    rewards: $ => seq(
+      'rewards',
+      repeat($.reward),
+      'endrewards'
+    ),
+
+    reward: $ => seq(
+      field('predicate', $.expression),
+      ':',
+      field('value', $.expression),
+      ';',
     ),
 
     expression: $ => choice(
@@ -184,6 +234,7 @@ module.exports = grammar({
     unary_minus:    $ => prec.left(11, seq('-', $.expression)),
 
     // Built-in functions
+    /*
     min:    $ => seq('min(', repeat1(seq($.expression, ',')), $.expression, ')'),
     max:    $ => seq('max(', repeat1(seq($.expression, ',')), $.expression, ')'),
     floor:  $ => seq('floor(', $.expression, ')'),
@@ -192,6 +243,7 @@ module.exports = grammar({
     pow:    $ => seq('pow(', $.expression, ',', $.expression, ')'),
     mod:    $ => seq('mod(', $.expression, ',', $.expression, ')'),
     log:    $ => seq('log(', $.expression, ',', $.expression, ')'),
+    */
 
     function:  $ => seq(
       field('name', $.function_identifier),
@@ -210,6 +262,8 @@ module.exports = grammar({
     identifier: $ => /[A-Za-z_][A-Za-z0-9_]*/,
 
     function_identifier: $ => /[A-Za-z_][A-Za-z0-9_]*\(/,
+
+    label_identifier: $ => /\"[A-Za-z_][A-Za-z0-9_]*\"/,
 
     type: $ => choice(
       $.bool_type,
