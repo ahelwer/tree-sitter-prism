@@ -96,7 +96,7 @@ module.exports = grammar({
 
     command: $ => seq(
       '[',
-      optional(field('action', $.identifier)),
+      field('action', optional($.identifier)),
       ']',
       $.guard,
       '->',
@@ -167,14 +167,25 @@ module.exports = grammar({
 
     rewards: $ => seq(
       'rewards',
-      repeat($.reward),
+      optional($.label_identifier),
+      repeat(choice($.state_reward, $.transition_reward)),
       'endrewards'
     ),
 
-    reward: $ => seq(
+    state_reward: $ => seq(
       field('predicate', $.expression),
       ':',
-      field('value', $.expression),
+      field('reward', $.expression),
+      ';',
+    ),
+
+    transition_reward: $ => seq(
+      '[',
+      field('action', optional($.identifier)),
+      ']',
+      field('predicate', $.expression),
+      ':',
+      field('reward', $.expression),
       ';',
     ),
 
