@@ -10,3 +10,5 @@
  1. Ensure `.\node_modules\.bin` is in your PATH environment variable
  1. Run `tree-sitter generate --log`
  1. Run `tree-sitter test`
+
+## Consume

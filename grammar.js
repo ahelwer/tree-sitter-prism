@@ -16,6 +16,7 @@ module.exports = grammar({
         $.formula,
         $.label,
         $.rewards,
+        $.process_algebra_operators,
       ),
     ),
 
@@ -48,7 +49,7 @@ module.exports = grammar({
       field('type', $.type),
       field('name', $.identifier),
       '=',
-      field('value', $.expression),
+      field('value', $._expression),
       ';',
     ),
 
@@ -56,7 +57,7 @@ module.exports = grammar({
       field('type', choice('const', 'rate', 'prob')),
       field('name', $.identifier),
       '=',
-      field('value', $.expression),
+      field('value', $._expression),
       ';',
     ),
 
@@ -90,7 +91,7 @@ module.exports = grammar({
       field('name', $.identifier),
       ':',
       field('type', choice($.range, $.type)),
-      field('init', optional(seq('init', $.expression))),
+      field('init', optional(seq('init', $._expression))),
       ';'
     ),
 
@@ -107,7 +108,7 @@ module.exports = grammar({
       ';',
     ),
 
-    guard: $ => $.expression,
+    guard: $ => $._expression,
 
     probabilistic_updates: $ => seq(
       repeat(seq($.probabilistic_update, '+')),
@@ -115,7 +116,7 @@ module.exports = grammar({
     ),
 
     probabilistic_update: $ => seq(
-      $.expression,
+      $._expression,
       ':',
       $.updates
     ),
@@ -130,13 +131,13 @@ module.exports = grammar({
       field('variable', $.identifier),
       '\'',
       '=',
-      field('value', $.expression),
+      field('value', $._expression),
       ')'
     ),
 
     multiple_initial_states: $ => seq(
       'init',
-      field('predicate', $.expression),
+      field('predicate', $._expression),
       'endinit',
     ),
 
@@ -145,7 +146,7 @@ module.exports = grammar({
       field('name', $.identifier),
       ':',
       field('type', choice($.range, $.int_type, $.bool_type)),
-      field('init', optional(seq('init', $.expression))),
+      field('init', optional(seq('init', $._expression))),
       ';'
     ),
 
@@ -153,7 +154,7 @@ module.exports = grammar({
       'formula',
       field('name', $.identifier),
       '=',
-      field('value', $.expression),
+      field('value', $._expression),
       ';',
     ),
 
@@ -161,7 +162,7 @@ module.exports = grammar({
       'label',
       field('name', $.label_identifier),
       '=',
-      field('predicate', $.expression),
+      field('predicate', $._expression),
       ';',
     ),
 
@@ -173,9 +174,9 @@ module.exports = grammar({
     ),
 
     state_reward: $ => seq(
-      field('predicate', $.expression),
+      field('predicate', $._expression),
       ':',
-      field('reward', $.expression),
+      field('reward', $._expression),
       ';',
     ),
 
@@ -183,13 +184,18 @@ module.exports = grammar({
       '[',
       field('action', optional($.identifier)),
       ']',
-      field('predicate', $.expression),
+      field('predicate', $._expression),
       ':',
-      field('reward', $.expression),
+      field('reward', $._expression),
       ';',
     ),
 
-    expression: $ => choice(
+    process_algebra_operators: $ => seq(
+      'system',
+      'endsystem',
+    ),
+
+    _expression: $ => choice(
       $.value,
       $.identifier,
       $.ternary,
@@ -223,50 +229,50 @@ module.exports = grammar({
       $.function,
     ),
 
-    parentheses:    $ => prec.left(12, seq('(', $.expression, ')')),
+    parentheses:    $ => prec.left(12, seq('(', $._expression, ')')),
 
     // Infix functions
-    ternary:        $ => prec.left(1, seq($.expression, '?', $.expression, ':', $.expression)),
-    implication:    $ => prec.left(2, seq($.expression, '=>', $.expression)),
-    iff:            $ => prec.left(3, seq($.expression, '<=>', $.expression)),
-    logical_or:     $ => prec.left(4, seq($.expression, '|', $.expression)),
-    logical_and:    $ => prec.left(5, seq($.expression, '&', $.expression)),
-    logical_neg:    $ => prec.left(6, seq('!', $.expression)),
-    equality:       $ => prec.left(7, seq($.expression, '=', $.expression)),
-    inequality:     $ => prec.left(7, seq($.expression, '!=', $.expression)),
-    lt:             $ => prec.left(8, seq($.expression, '<', $.expression)),
-    lte:            $ => prec.left(8, seq($.expression, '<=', $.expression)),
-    gt:             $ => prec.left(8, seq($.expression, '>', $.expression)),
-    gte:            $ => prec.left(8, seq($.expression, '>=', $.expression)),
-    addition:       $ => prec.left(9, seq($.expression, '+', $.expression)),
-    subtraction:    $ => prec.left(9, seq($.expression, '-', $.expression)),
-    multiplication: $ => prec.left(10, seq($.expression, '*', $.expression)),
-    division:       $ => prec.left(10, seq($.expression, '/', $.expression)),
-    unary_minus:    $ => prec.left(11, seq('-', $.expression)),
+    ternary:        $ => prec.left(1, seq($._expression, '?', $._expression, ':', $._expression)),
+    implication:    $ => prec.left(2, seq($._expression, '=>', $._expression)),
+    iff:            $ => prec.left(3, seq($._expression, '<=>', $._expression)),
+    logical_or:     $ => prec.left(4, seq($._expression, '|', $._expression)),
+    logical_and:    $ => prec.left(5, seq($._expression, '&', $._expression)),
+    logical_neg:    $ => prec.left(6, seq('!', $._expression)),
+    equality:       $ => prec.left(7, seq($._expression, '=', $._expression)),
+    inequality:     $ => prec.left(7, seq($._expression, '!=', $._expression)),
+    lt:             $ => prec.left(8, seq($._expression, '<', $._expression)),
+    lte:            $ => prec.left(8, seq($._expression, '<=', $._expression)),
+    gt:             $ => prec.left(8, seq($._expression, '>', $._expression)),
+    gte:            $ => prec.left(8, seq($._expression, '>=', $._expression)),
+    addition:       $ => prec.left(9, seq($._expression, '+', $._expression)),
+    subtraction:    $ => prec.left(9, seq($._expression, '-', $._expression)),
+    multiplication: $ => prec.left(10, seq($._expression, '*', $._expression)),
+    division:       $ => prec.left(10, seq($._expression, '/', $._expression)),
+    unary_minus:    $ => prec.left(11, seq('-', $._expression)),
 
     // Built-in functions
     /*
-    min:    $ => seq('min(', repeat1(seq($.expression, ',')), $.expression, ')'),
-    max:    $ => seq('max(', repeat1(seq($.expression, ',')), $.expression, ')'),
-    floor:  $ => seq('floor(', $.expression, ')'),
-    ceil:   $ => seq('ceil(', $.expression, ')'),
-    round:  $ => seq('round(', $.expression, ')'),
-    pow:    $ => seq('pow(', $.expression, ',', $.expression, ')'),
-    mod:    $ => seq('mod(', $.expression, ',', $.expression, ')'),
-    log:    $ => seq('log(', $.expression, ',', $.expression, ')'),
+    min:    $ => seq('min(', repeat1(seq($._expression, ',')), $._expression, ')'),
+    max:    $ => seq('max(', repeat1(seq($._expression, ',')), $._expression, ')'),
+    floor:  $ => seq('floor(', $._expression, ')'),
+    ceil:   $ => seq('ceil(', $._expression, ')'),
+    round:  $ => seq('round(', $._expression, ')'),
+    pow:    $ => seq('pow(', $._expression, ',', $._expression, ')'),
+    mod:    $ => seq('mod(', $._expression, ',', $._expression, ')'),
+    log:    $ => seq('log(', $._expression, ',', $._expression, ')'),
     */
 
     function:  $ => seq(
       field('name', $.function_identifier),
-      field('parameter', optional(seq(repeat(seq($.expression, ',')), $.expression))),
+      field('parameter', optional(seq(repeat(seq($._expression, ',')), $._expression))),
       ')'
     ),
 
     range: $ => seq(
       '[',
-      field('low', $.expression),
+      field('low', $._expression),
       '..',
-      field('high', $.expression),
+      field('high', $._expression),
       ']',
     ),
 

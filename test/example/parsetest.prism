@@ -1,0 +1,22 @@
+module test
+	x : [0 .. 3];
+	y : [0 .. 4];
+	[a] x = 1 -> (x' = 2);
+endmodule
+
+mdp
+
+formula foo = x + y;
+
+global g : [0 .. 2] init 2 + 3;
+
+label "fail" = x>100 & y=2;
+
+rewards "test_rewards"
+	x = 0 : 20;
+	[a] y = 0 : x;
+endrewards
+
+system
+
+endsystem
