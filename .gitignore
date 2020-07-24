@@ -1,6 +1,4 @@
-*.gyp
 build
-index.js
 package-lock.json
 parser.exp
 parser.lib

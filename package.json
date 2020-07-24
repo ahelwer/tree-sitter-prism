@@ -1,10 +1,14 @@
 {
   "name": "tree-sitter-prism",
   "version": "0.1.0",
-  "description": "tree-sitter grammar for PRISM",
+  "description": "PRISM grammar for tree-sitter",
+  "keywords": [
+    "parser",
+    "lexer"
+  ],
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tree-sitter test"
   },
   "repository": {
     "type": "git",

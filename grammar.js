@@ -1,5 +1,5 @@
 module.exports = grammar({
-  name: 'PRISM',
+  name: 'prism',
 
   /*extras: $ => [],*/
 
