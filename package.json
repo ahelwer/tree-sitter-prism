@@ -2,11 +2,19 @@
   "name": "tree-sitter-prism",
   "version": "0.1.0",
   "description": "PRISM grammar for tree-sitter",
+  "main": "index.js",
   "keywords": [
     "parser",
     "lexer"
   ],
-  "main": "index.js",
+  "author": "Andrew Helwer",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.14.1"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.16.9"
+  },
   "scripts": {
     "test": "tree-sitter test"
   },
@@ -14,16 +22,8 @@
     "type": "git",
     "url": "git+https://github.com/ahelwer/tree-sitter-prism.git"
   },
-  "author": "Andrew Helwer",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ahelwer/tree-sitter-prism/issues"
   },
-  "homepage": "https://github.com/ahelwer/tree-sitter-prism#readme",
-  "dependencies": {
-    "nan": "^2.14.1"
-  },
-  "devDependencies": {
-    "tree-sitter-cli": "^0.16.8"
-  }
+  "homepage": "https://github.com/ahelwer/tree-sitter-prism#readme"
 }

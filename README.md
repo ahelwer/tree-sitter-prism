@@ -11,4 +11,7 @@
  1. Run `tree-sitter generate --log`
  1. Run `tree-sitter test`
 
-## Consume
+## Publish Locally
+ 1. Run `tree-sitter generate` to create `src` files
+ 1. Run `npm install` to create `build` files
+ 1. Consume with `const prism = require('C:\\Users\\ahelwer\\source\\tree-sitter-prism');`
